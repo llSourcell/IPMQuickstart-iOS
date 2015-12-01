@@ -9,7 +9,7 @@
 #import "MessageTableViewCell.h"
 #import "MemberTypingTableViewCell.h"
 
-@interface ViewController () <UITableViewDataSource, UITableViewDelegate, TMChannelDelegate, UITextFieldDelegate>
+@interface ViewController () <UITableViewDataSource, UITableViewDelegate, TWMChannelDelegate, UITextFieldDelegate>
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) NSMutableOrderedSet *messages;
 @property (weak, nonatomic) IBOutlet UITextField *messageInput;
@@ -83,7 +83,7 @@
     }
 }
 
-- (void)setChannel:(TMChannel *)channel {
+- (void)setChannel:(TWMChannel *)channel {
     _channel = channel;
     self.channel.delegate = self;
 
@@ -107,7 +107,7 @@
     NSMutableString *ret = [NSMutableString string];
 
     for (int ndx=0; ndx < typingUsers.count; ndx++) {
-        TMMember *member = (TMMember *)typingUsers[ndx];
+        TWMMember *member = (TWMMember *)typingUsers[ndx];
         if (ndx > 0 && ndx < typingUsers.count - 1) {
             [ret appendString:@", "];
         } else if (ndx > 0 && ndx == typingUsers.count - 1) {
@@ -132,7 +132,7 @@
         cell = typingCell;
     } else {
         MessageTableViewCell *messageCell = [tableView dequeueReusableCellWithIdentifier:@"message"];
-        TMMessage *message = self.messages[indexPath.row];
+        TWMMessage *message = self.messages[indexPath.row];
         
         messageCell.authorLabel.text = message.author;
         messageCell.dateLabel.text = message.timestamp;
@@ -166,11 +166,11 @@
     if (textField.text.length == 0) {
         [self.view endEditing:YES];
     } else {
-        TMMessage *message = [self.channel.messages createMessageWithBody:textField.text];
+        TWMMessage *message = [self.channel.messages createMessageWithBody:textField.text];
         textField.text = @"";
         [self.channel.messages sendMessage:message
-                                completion:^(TMResultEnum result) {
-                                    if (result == TMResultFailure) {
+                                completion:^(TWMResult result) {
+                                    if (result == TWMResultFailure) {
                                     }
                                 }];
     }
@@ -202,7 +202,7 @@
     [self addMessages:self.channel.messages.allObjects];
 }
 
-- (void)addMessages:(NSArray<TMMessage *> *)messages {
+- (void)addMessages:(NSArray<TWMMessage *> *)messages {
     [self.messages addObjectsFromArray:messages];
     [self sortMessages];
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -213,7 +213,7 @@
     });
 }
 
-- (void)removeMessages:(NSArray<TMMessage *> *)messages {
+- (void)removeMessages:(NSArray<TWMMessage *> *)messages {
     [self.messages removeObjectsInArray:messages];
     [self sortMessages];
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -241,73 +241,73 @@
                                                                       ascending:YES]]];
 }
 
-- (TMMessage *)messageForIndexPath:(nonnull NSIndexPath *)indexPath {
+- (TWMMessage *)messageForIndexPath:(nonnull NSIndexPath *)indexPath {
     return self.messages[indexPath.row];
 }
 
 #pragma mark - TMChannelDelegate
 
 - (void)ipMessagingClient:(TwilioIPMessagingClient *)client
-           channelChanged:(TMChannel *)channel {
+           channelChanged:(TWMChannel *)channel {
 }
 
 - (void)ipMessagingClient:(TwilioIPMessagingClient *)client
-           channelDeleted:(TMChannel *)channel {
+           channelDeleted:(TWMChannel *)channel {
 }
 
 - (void)ipMessagingClient:(TwilioIPMessagingClient *)client
-     channelHistoryLoaded:(TMChannel *)channel {
+     channelHistoryLoaded:(TWMChannel *)channel {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadData];
     });
 }
 
 - (void)ipMessagingClient:(TwilioIPMessagingClient *)client
-                  channel:(TMChannel *)channel
-             memberJoined:(TMMember *)member {
+                  channel:(TWMChannel *)channel
+             memberJoined:(TWMMember *)member {
 }
 
 - (void)ipMessagingClient:(TwilioIPMessagingClient *)client
-                  channel:(TMChannel *)channel
-            memberChanged:(TMMember *)member {
+                  channel:(TWMChannel *)channel
+            memberChanged:(TWMMember *)member {
 
 }
 
 - (void)ipMessagingClient:(TwilioIPMessagingClient *)client
-                  channel:(TMChannel *)channel
-               memberLeft:(TMMember *)member {
+                  channel:(TWMChannel *)channel
+               memberLeft:(TWMMember *)member {
    
 }
 
 - (void)ipMessagingClient:(TwilioIPMessagingClient *)client
-                  channel:(TMChannel *)channel
-             messageAdded:(TMMessage *)message {
+                  channel:(TWMChannel *)channel
+             messageAdded:(TWMMessage *)message {
     [self addMessages:@[message]];
 }
 
 - (void)ipMessagingClient:(TwilioIPMessagingClient *)client
-                  channel:(TMChannel *)channel
-           messageDeleted:(TMMessage *)message {
+                  channel:(TWMChannel *)channel
+           messageDeleted:(TWMMessage *)message {
     [self removeMessages:@[message]];
 }
 
 - (void)ipMessagingClient:(TwilioIPMessagingClient *)client
-                  channel:(TMChannel *)channel
-           messageChanged:(TMMessage *)message {
+                  channel:(TWMChannel *)channel
+           messageChanged:(TWMMessage *)message {
     [self.tableView reloadData];
 }
 
 - (void)ipMessagingClient:(TwilioIPMessagingClient *)client
-   typingStartedOnChannel:(TMChannel *)channel
-                   member:(TMMember *)member {
+   typingStartedOnChannel:(TWMChannel *)channel
+                   member:(TWMMember *)member {
     [self.typingUsers addObject:member];
     [self.tableView reloadData];
     [self scrollToBottomMessage];
 }
 
 - (void)ipMessagingClient:(TwilioIPMessagingClient *)client
-     typingEndedOnChannel:(TMChannel *)channel
-                   member:(TMMember *)member {
+     typingEndedOnChannel:(TWMChannel *)channel
+                   member:(TWMMember *)member {
     [self.typingUsers removeObject:member];
     [self.tableView reloadData];
     [self scrollToBottomMessage];

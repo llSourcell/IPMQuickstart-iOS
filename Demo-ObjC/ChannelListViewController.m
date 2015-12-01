@@ -13,7 +13,7 @@
 @interface ChannelListViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
 
-@property (nonatomic, strong) TMChannels *channelsList;
+@property (nonatomic, strong) TWMChannels *channelsList;
 @property (nonatomic, strong) NSMutableOrderedSet *channels;
 @end
 
@@ -44,13 +44,13 @@
     [self.tableView reloadData];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [[[IPMessagingManager sharedManager] client] channelsListWithCompletion:^(TMResultEnum result, TMChannels *channelsList) {
-            if (result == TMResultSuccess) {
+        [[[IPMessagingManager sharedManager] client] channelsListWithCompletion:^(TWMResult result, TWMChannels *channelsList) {
+            if (result == TWMResultSuccess) {
                 self.channelsList = channelsList;
                 
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                    [self.channelsList loadChannelsWithCompletion:^(TMResultEnum result) {
-                        if (result == TMResultSuccess) {
+                    [self.channelsList loadChannelsWithCompletion:^(TWMResult result) {
+                        if (result == TWMResultSuccess) {
                             self.channels = [[NSMutableOrderedSet alloc] init];
                             [self.channels addObjectsFromArray:[self.channelsList allObjects]];
                             
@@ -61,7 +61,7 @@
                                 
                                 //OPTION 1
                                 //find a channel match
-                                for (TMChannel *chan in self.channels) {
+                                for (TWMChannel *chan in self.channels) {
                                     if([chan.friendlyName  isEqual: @"general"]) {
                                         isMatch = true;
                                         //join it
@@ -77,9 +77,9 @@
                                 if(isMatch == false) {
                                     NSLog(@"No matching channel found");
                                     [self.channelsList createChannelWithFriendlyName:@"general"
-                                                                                type:TMChannelTypePublic
-                                                                          completion:^(TMResultEnum result, TMChannel *channel) {
-                                                                              if (result == TMResultSuccess) {
+                                                                                type:TWMChannelTypePublic
+                                                                          completion:^(TWMResult result, TWMChannel *channel) {
+                                                                              if (result == TWMResultSuccess) {
                                                                                   NSLog(@"Channel created!");
                                                                                   [self joinChannel:channel];
                                                                                   [self performSegueWithIdentifier:@"viewChannel" sender:channel];
@@ -110,8 +110,8 @@
 
 
 
-- (void)joinChannel:(TMChannel *)channel {
-    [channel joinWithCompletion:^(TMResultEnum result) {
+- (void)joinChannel:(TWMChannel *)channel {
+    [channel joinWithCompletion:^(TWMResult result) {
         NSLog(@"Channel joined!");
     }];
 }

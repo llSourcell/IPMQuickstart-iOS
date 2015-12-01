@@ -180,8 +180,6 @@
 #pragma mark - Internal methods
 
 
-
-
 - (void)keyboardWillShow:(NSNotification *)notification {
     NSDictionary* userInfo = [notification userInfo];
     CGFloat keyboardHeight = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;

@@ -42,7 +42,9 @@ Your new service SID will be prefixed with an `IS` in the JSON data you get back
 
 The app uses Cocoapods for dependencies.  Run 'pod install' to install the dependencies, then open IPMQuickstart.xcworkspace to view the project. 
 
-Once you've compiled and run the project and you're good to go! The app will generate a username and autoconnect to the 'general' channel
+Once you've compiled and run the project and you're good to go! The app will generate a username and autoconnect to the 'general' channel.
+
+##Screenshot
 
 ![screenshot of chat app](http://i.imgur.com/WOpm5qe.png)
 

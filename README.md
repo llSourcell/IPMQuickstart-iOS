@@ -40,7 +40,7 @@ Your new service SID will be prefixed with an `IS` in the JSON data you get back
 
 ## Setting Up The iOS App
 
-The app already has the 2 dependencies you need preloaded onto the project (Twilio IPM and libc++.dylib)
+The app uses Cocoapods for dependencies. Just run 'pod install' to install the dependencies, then open IPMQuickstart.xcworkspace to view the project. 
 
 Just compile and run the project and you're good to go! The app will generate a username and autoconnect to the 'general' channel
 

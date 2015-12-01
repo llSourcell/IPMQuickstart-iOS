@@ -1,5 +1,5 @@
 
-# IP Messaging Quickstart for iOS (Objective-C)
+# IP Messaging Starter Application for iOS, using Objective-C
 
 This application should give you a ready-made starting point for writing your
 own messaging apps with Twilio IP Messaging. Before we begin, we need to collect
@@ -45,12 +45,6 @@ The app already has the 2 dependencies you need preloaded onto the project (Twil
 Just compile and run the project and you're good to go! The app will generate a username and autoconnect to the 'general' channel
 
 ![screenshot of chat app](http://i.imgur.com/WOpm5qe.png)
-
-## License
-
-MIT
-
-# IP Messaging Starter Application for iOS, using Objective-C
 
 ## License
 
